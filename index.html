@@ -1,114 +1,253 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Lapor</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <title>Green Tosca Page</title>
     <style>
-        #map {
-            height: 400px;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1ea2c3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: rgb(183, 222, 237);
+            flex-direction: column;
+            position: relative;
+        }
+
+        header {
+            position: absolute;
+            top: 0;
             width: 100%;
+            background-color: #137593;
+            text-align: center;
+            padding: 10px 0;
+            z-index: 1;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        header p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .info {
+            position: absolute;
+            top: 60px;
+            left: 10px;
+            font-size: 14px;
+            color: rgb(255, 230, 1);
+            z-index: 2;
+            font-weight: bold;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .button {
+            display: block;
+            margin: 10px auto;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #005cb8;
+            background-color: rgb(141, 237, 254);
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #0b5ca2;
+            color: white;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            width: 300px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0px;
+            box-shadow: 0px 4px 10px rgba(207, 169, 169, 0.25);
+        }
+
+        .modal label {
+            text-align: left;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+            color: black;
+        }
+
+        .modal p {
+            font-size: 12px;
+            color: gray;
+            margin-top: -5px;
+            margin-bottom: 15px;
+        }
+
+        .modal input {
+            text-align: left;
+            padding: 10px;
+            width: 80%;
+            margin: 0;
+            margin-bottom: 0px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .modal button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            background-color: #3CB371;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .modal button:hover {
+            background-color: #2E8B57;
         }
     </style>
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.16.0/firebase-app.js';
-        import { getDatabase, ref, set, onDisconnect } from 'https://www.gstatic.com/firebasejs/9.16.0/firebase-database.js';
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDgPYGXqbBXt1NayhNB5M-8mjXfGKrOzWM",
-            authDomain: "coba-accf3.firebaseapp.com",
-            databaseURL: "https://coba-accf3-default-rtdb.asia-southeast1.firebasedatabase.app/",
-            projectId: "coba-accf3",
-            storageBucket: "coba-accf3.appspot.com",
-            messagingSenderId: "171764982868",
-            appId: "1:171764982868:web:19c716f6617667514679c1"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
-
-        let map;
-        let marker;
-
-        // Fungsi untuk mendapatkan atau membuat deviceId
-        function getDeviceId() {
-            let deviceId = localStorage.getItem('deviceId');
-            if (!deviceId) {
-                // Jika tidak ada deviceId, buat ID baru berdasarkan waktu dan simpan ke LocalStorage
-                deviceId = `device${Date.now()}`;
-                localStorage.setItem('deviceId', deviceId);
-            }
-            return deviceId;
-        }
-
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.watchPosition(showPosition, showError, {
-                    enableHighAccuracy: true
-                });
-            } else {
-                alert("Geolocation tidak didukung oleh browser ini.");
-            }
-        }
-
-        function showPosition(position) {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-
-            // Gunakan deviceId dari localStorage untuk mengidentifikasi perangkat
-            const deviceId = getDeviceId();
-            const locationRef = ref(database, `devices/${deviceId}`);
-
-            // Menyimpan data lokasi ke Firebase
-            set(locationRef, {
-                latitude: lat,
-                longitude: lon,
-                timestamp: Date.now()
-            });
-
-            // Menghapus data ketika perangkat keluar
-            onDisconnect(locationRef).remove();
-
-            // Update posisi di peta
-            if (!map) {
-                map = L.map('map').setView([lat, lon], 13);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 19,
-                }).addTo(map);
-            }
-
-            if (marker) {
-                map.removeLayer(marker);
-            }
-            marker = L.marker([lat, lon]).addTo(map);
-            map.setView([lat, lon], 15);
-        }
-
-        function showError(error) {
-            switch (error.code) {
-                case error.PERMISSION_DENIED:
-                    alert("Target tidak izinkan lokasi.");
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    alert("Informasi lokasi tidak tersedia.");
-                    break;
-                case error.TIMEOUT:
-                    alert("Permintaan untuk mendapatkan lokasi pengguna telah habis.");
-                    break;
-                case error.UNKNOWN_ERROR:
-                    alert("Terjadi kesalahan yang tidak diketahui.");
-                    break;
-            }
-        }
-
-        window.onload = getLocation;
-    </script>
 </head>
+
 <body>
-    <h1>Sistem Lapor</h1>
-    <p>Proses Development...</p>
-    <div id="map"></div> <!-- Tambahkan peta di halaman sistem lapor -->
+    <div class="info" id="infoText">Pembayaran maksimal tanggal 18 bulan ini</div>
+    <header>
+        <h1>Kartu Listrik Digital</h1>
+        <p>Krapyak, Panjangrejo, Pundong Bantul, 55771</p>
+    </header>
+    <div class="container">
+        <a href="#" class="button" id="cekPembayaran">Cek Laporan Pembayaran</a>
+        <a href="#" class="button" id="pembayaranDigital">Pembayaran Digital</a>
+    </div>
+
+    <!-- Modal for Input -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <div style="text-align: left; margin: 20px 0; width: 80%;">
+                <p style="margin-bottom: 15px; font-size: 14px; color: rgb(112, 90, 90);">
+                    Nomor ID atau Nama dapat dilihat di kartu listrik.
+                </p>
+                <label for="inputField">Nomor ID / Nama:</label>
+                <input type="text" id="inputField" placeholder="Masukkan Nomor ID atau Nama"
+                    style="width: 100%; padding: 10px; margin-top: 5px;">
+            </div>
+            <button id="submitLoginButton">Login</button>
+        </div>
+    </div>
+
+    <script>
+        // Get modal and buttons
+        const modal = document.getElementById("paymentModal");
+        const cekPembayaranButton = document.getElementById("cekPembayaran");
+        const pembayaranDigitalButton = document.getElementById("pembayaranDigital");
+        const submitLoginButton = document.getElementById("submitLoginButton");
+
+        // Valid login combinations (ID, Name) for each scenario
+        const validLogin_1 = [
+            { id: "521030384149", name: ["Hadi Suyatno", "Gianto"] },
+            { id: "521030422409", name: ["Sunubadi"] },
+            { id: "521030422417", name: ["Musdi Wiyono", "Wahadi"] }
+        ];
+        // const validLogin_2 = [
+        //     { id: "085877229581", name: "Ridwan Syaiful" }
+        // ];
+
+        let buttonClicked = null; // Store which button was clicked
+
+        // Show modal on button click
+        cekPembayaranButton.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent default link behavior
+            modal.style.display = "flex"; // Show modal
+            buttonClicked = 'cekPembayaran'; // Store which button was clicked
+        });
+
+        pembayaranDigitalButton.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent default link behavior
+            let page = "payment.html"; // You can customize this page name
+            window.location.href = page; // Navigate to the page directly
+            // modal.style.display = "flex"; // Show modal
+            // buttonClicked = 'pembayaranDigital'; // Store which button was clicked
+        });
+
+        // Submit the login and check if ID or name match for both logins
+        submitLoginButton.addEventListener("click", function () {
+            const inputValue = document.getElementById("inputField").value.trim();
+
+            // Check if the input matches a valid ID or Name in either validLogin_1 or validLogin_2
+            const validLogin_1_match = validLogin_1.find(login => login.id === inputValue || login.name.includes(inputValue));
+            // const validLogin_1_match = validLogin_1.find(login => login.id === inputValue || login.name === inputValue);
+            // const validLogin_2_match = validLogin_2.find(login => login.id === inputValue || login.name === inputValue);
+
+            if (validLogin_1_match) {
+                modal.style.display = "none"; // Hide modal after successful login
+
+                let page = '';
+
+                // Redirect based on which login is valid and which button was clicked
+                if (validLogin_1_match) {
+                    page = `${validLogin_1_match.id}.html`; // Create the page URL dynamically for validLogin_1
+                }
+                // else if (validLogin_2_match) {
+                //     page = `${validLogin_2_match.id}.html`; // Create the page URL dynamically for validLogin_2
+                // }
+
+                // If 'cekPembayaran' button was clicked, add additional suffix to the page URL
+                if (buttonClicked === 'cekPembayaran') {
+                    page = page;
+                }
+                else if (buttonClicked === 'pembayaranDigital') {
+                    page = `pembayaran.html`;
+                }
+
+                window.location.href = page; // Navigate to the page
+            } else {
+                alert("ID atau Nama tidak valid. Perhatikan besar kecil huruf untuk Nama.");
+            }
+        });
+
+        // Close modal if clicked outside the modal content
+        window.onclick = function (event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        };
+    </script>
 </body>
+
 </html>
