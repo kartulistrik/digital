@@ -206,7 +206,7 @@
 
         whatsappButton.addEventListener("click", function () {
             const phoneNumber = "6285877229581"; // Ganti dengan nomor WhatsApp yang diinginkan
-            const message = `Halo, saya ingin mengonfirmasi pembayaran dengan ID ${idNumber}. Nama: ${document.getElementById("userName").textContent}. Nominal: ${document.getElementById("nominal").textContent}.`;
+            const message = `Halo, saya ingin mengonfirmasi pembayaran digital melalui Rek. BRI dengan ID ${idNumber}. Nama: ${document.getElementById("userName").textContent}. Nominal: ${document.getElementById("nominal").textContent}.`;
 
             // Membuka WhatsApp dengan pesan konfirmasi
             const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
