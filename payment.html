@@ -25,12 +25,15 @@
 
         header {
             position: fixed;
-            /* Set header to fixed position */
+            /* Tetap di posisi layar saat di-scroll */
             top: 0;
             width: 100%;
+            /* Header tetap penuh melebar */
             background-color: #137593;
-            text-align: center;
-            padding: 10px 0;
+            padding: 10px 20px;
+            /* Padding atas/bawah dan sisi kiri/kanan */
+            box-sizing: border-box;
+            /* Pastikan padding dihitung dalam lebar total */
             z-index: 1;
         }
 
@@ -38,12 +41,35 @@
             margin: 0;
             font-size: 24px;
             font-weight: bold;
+            padding-left: 60px;
+            /* Tambahkan padding agar tidak menabrak tombol */
+            text-align: center;
+            /* Tetap di tengah kotak */
         }
 
         header p {
             margin: 0;
             font-size: 14px;
+            padding-left: 60px;
+            /* Sama seperti h1 agar konsisten */
+            text-align: center;
         }
+
+        .home-button {
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            height: 64px;
+            background-color: #ffcf11;
+            padding: 10px 15px;
+            font-size: 14px;
+            color: rgb(0, 0, 0);
+            border: none;
+            font-weight: bold;
+            z-index: 2;
+            cursor: pointer;
+        }
+
 
         .container {
             display: flex;
@@ -136,20 +162,6 @@
 
         .modal button:hover {
             background-color: #2E8B57;
-        }
-
-        .home-button {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            background-color: #f1c40f;
-            padding: 10px 20px;
-            font-size: 14px;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 2;
         }
 
         .home-button:hover {

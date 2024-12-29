@@ -74,61 +74,79 @@
 
         header {
             position: fixed;
-            /* Fixed position agar tetap di atas */
+            color: rgb(243, 243, 243);
+            /* Tetap di posisi layar saat di-scroll */
             top: 0;
-            left: 0;
             width: 100%;
-            background-color: #165c91;
-            /* Darker green */
-            text-align: center;
-            padding: 20px 0;
-            z-index: 2;
-            /* Menempatkan header di atas konten */
-            color: rgb(148, 246, 250);
-            display: flex;
-            justify-content: center;
-            /* Memastikan konten berada di tengah */
-            align-items: center;
-            /* Vertikal center */
-            padding-left: 20px;
-            padding-right: 20px;
+            /* Header tetap penuh melebar */
+            background-color: #137593;
+            padding: 10px 20px;
+            /* Padding atas/bawah dan sisi kiri/kanan */
+            box-sizing: border-box;
+            /* Pastikan padding dihitung dalam lebar total */
+            z-index: 1;
         }
 
         header h1 {
             margin: 0;
-            font-size: 30px;
+            font-size: 24px;
             font-weight: bold;
+            padding-left: 60px;
+            /* Tambahkan padding agar tidak menabrak tombol */
+            text-align: center;
+            /* Tetap di tengah kotak */
         }
 
         header p {
             margin: 0;
-            font-size: 18px;
+            font-size: 14px;
+            padding-left: 60px;
+            /* Sama seperti h1 agar konsisten */
+            text-align: center;
         }
 
         .home-button {
-            position: absolute;
-            left: 20px;
-            /* Menempatkan tombol di kiri atas */
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            height: 63px;
+            /* Menentukan tinggi tombol */
             background-color: #e0fb0d;
-            /* Green button */
+            /* Warna latar belakang hijau */
             color: rgb(0, 0, 0);
-            padding: 15px 20px;
+            /* Warna teks */
+            padding: 0 20px;
+            /* Mengatur padding kiri dan kanan */
             text-align: center;
+            /* Membuat teks rata tengah secara horizontal */
             text-decoration: none;
-            border-radius: 5px;
+            /* Menghilangkan garis bawah */
             font-size: 16px;
+            /* Ukuran font */
             font-weight: bold;
             /* Membuat font menjadi bold */
             cursor: pointer;
+            /* Menampilkan kursor pointer */
             transition: background-color 0.3s ease;
+            /* Transisi saat hover */
+
+            /* Menambahkan flexbox untuk penataan */
+            display: flex;
+            align-items: center;
+            /* Menjaga teks berada di tengah secara vertikal */
+            justify-content: center;
+            /* Menjaga teks berada di tengah secara horizontal */
+            /* border-radius: 5px; */
+            /* Mengubah sudut menjadi melengkung (opsional) */
         }
+
 
         .home-button:hover {
             background-color: #45a049;
         }
 
         h1 {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: bold;
             text-align: center;
             margin-top: 40px;
