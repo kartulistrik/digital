@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pembayaran BRI</title>
     <style>
+        /* CSS seperti sebelumnya */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -13,22 +14,26 @@
             background-color: #1ea2c3;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
             height: 100vh;
             color: rgb(183, 222, 237);
             flex-direction: column;
             position: relative;
-            padding-top: 100px;
+            padding-top: 50px;
         }
 
         header {
             position: absolute;
             top: 0;
             width: 100%;
+            right: 0;
+            margin-bottom: 0px;
             background-color: #137593;
             text-align: center;
             padding: 10px 0;
             z-index: 1;
+            padding-left: 20px;
+            /* Tambahkan jarak dari sisi kiri */
         }
 
         header h1 {
@@ -46,7 +51,7 @@
             text-align: center;
             width: 80%;
             max-width: 600px;
-            margin-top: 60px;
+            margin-top: 0px;
             background-color: white;
             padding: 20px;
             border-radius: 8px;
@@ -72,35 +77,80 @@
             font-size: 14px;
         }
 
-        .copy-button:hover {
-            background-color: #003f73;
-        }
-
-        .pay-button {
+        .pay-button,
+        .cancel-button {
             padding: 10px 20px;
-            background-color: #3CB371;
+            margin-bottom: 10px;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
-            margin-top: 20px;
+        }
+
+        .pay-button {
+            background-color: #3CB371;
         }
 
         .pay-button:hover {
             background-color: #2E8B57;
         }
 
+        .cancel-button {
+            background-color: #FF6347;
+        }
+
+        .cancel-button:hover {
+            background-color: #CD5C5C;
+        }
+
+        .payment-steps {
+            text-align: left;
+            color: #0f2232;
+            /* Mengatur teks rata kiri */
+            margin-left: 20px;
+            /* Memberikan jarak dari kiri */
+            padding-left: 10px;
+            /* Memberikan padding dari kiri */
+            line-height: 1.4;
+        }
+
+        .copy-button {
+            width: 70px;
+            height: 45px;
+            /* Sesuaikan lebar di sini */
+        }
+
+        .whatsapp-button {
+            padding: 10px 20px;
+            background-color: #25D366;
+            margin-top: 10px;
+            /* Warna khas WhatsApp */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .whatsapp-button:hover {
+            background-color: #1DA851;
+        }
     </style>
 </head>
 
 <body>
     <header>
-        <h1>Pembayaran Digital - BRI</h1>
-        <p>Krapyak, Panjangrejo, Pundong Bantul, 55771</p>
+        <h1>Pembayaran Digital</h1>
+        <!-- <p>Krapyak, Panjangrejo, Pundong Bantul, 55771</p> -->
     </header>
 
+    <div style="text-align: center; margin-bottom: 50px; color: #ffffff; font-size: 24px; font-weight: bold;">
+        Metode Pembayaran BRI
+    </div>
+
     <div class="container">
+
         <!-- Nomor ID -->
         <div class="content">
             <p><strong>Nomor ID:</strong> <span id="idNumber">Loading...</span></p>
@@ -118,32 +168,99 @@
 
         <!-- Cara Pembayaran -->
         <div class="content">
+
             <p><strong>Cara Pembayaran:</strong></p>
-            <ol>
+            <ol class="payment-steps">
                 <li>Buka aplikasi pembayaran Anda.</li>
-                <li>Salin nomor rekening di bawah ini:</li>
-                <li>
-                    <p id="rekeningNumber">1234567890</p>
+                <li>Tansfer pembayaran ke nomor :</li>
+
+                <li style="display: flex; align-items: center; justify-content: space-between;">
+                    <p id="rekeningNumber" style="margin: 1;">0029-0102-0552-530</p>
                     <button class="copy-button" id="copyButton">Salin Nomor</button>
                 </li>
-                <li>Masukkan nominal pembayaran dan lanjutkan pembayaran.</li>
+                <li>Masukkan nominal Tagihan dan lanjutkan pembayaran.</li>
+                <li>Upload Bukti Pembayaran atau konfirmasi pembayaran via WA agar pembayaran dapat diproses.</li>
             </ol>
         </div>
 
-        <!-- Tombol Bayar -->
-        <button class="pay-button" id="payButton">Bayar</button>
+        <!-- Tombol Bayar dan Batal -->
+        <div class="button-container">
+            <button class="cancel-button" id="cancelButton">Batal</button>
+            <button class="pay-button" id="payButton">Upload</button>
+        </div>
+
+        <div style="color: black;">
+            atau
+        </div>
+        <div class="button-container">
+            <button class="whatsapp-button" id="whatsappButton">Konfirmasi WA</button>
+        </div>
+
     </div>
 
     <script>
-        // Retrieve data from localStorage
-        const idNumber = localStorage.getItem("idNumber") || "not data"; // Default ID if none found
-        const userName = localStorage.getItem("userName") || "Hadi Suyatno"; // Default name if none found
-        const nominal = localStorage.getItem("nominal") || "Rp 1,000,000"; // Default nominal if none found
+        // URL untuk mendapatkan data dari spreadsheet dalam format CSV
+        const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRVyuT4sL5-SCmp5YSWDdcZxtiadyXYwkX3HLlf711kl_gKUTqSyNYxvut4dB9_ZCJqDQAKwu6iU6H_/pub?output=csv&gid=0";
 
-        // Set data in HTML
+        const whatsappButton = document.getElementById("whatsappButton");
+
+        whatsappButton.addEventListener("click", function () {
+            const phoneNumber = "085877229581"; // Ganti dengan nomor WhatsApp yang diinginkan
+            const message = `Halo, saya ingin mengonfirmasi pembayaran dengan ID ${idNumber}. Nama: ${document.getElementById("userName").textContent}. Nominal: ${document.getElementById("nominal").textContent}.`;
+
+            // Membuka WhatsApp dengan pesan konfirmasi
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, "_blank");
+        });
+
+
+        // Ambil parameter dari URL
+        const params = new URLSearchParams(window.location.search);
+        const idNumber = params.get('id') || "Data tidak ditemukan";
+
+        // Tampilkan ID di halaman
         document.getElementById("idNumber").textContent = idNumber;
-        document.getElementById("userName").textContent = userName;
-        document.getElementById("nominal").textContent = nominal;
+
+        // Fungsi untuk mengambil data dari spreadsheet
+        function fetchSpreadsheetData(id) {
+            fetch(sheetURL)
+                .then((response) => response.text())
+                .then((data) => {
+                    const rows = data.split("\n").map((row) => row.split(","));
+                    const idIndex = 1; // Kolom B (indeks ke-1)
+                    const nameIndex = 3; // Kolom D (indeks ke-3)
+                    const nominalIndex = 7; // Kolom H (indeks ke-7)
+
+                    // Cari baris yang cocok dengan ID
+                    const matchedRow = rows.find((row) => row[idIndex]?.trim() === id);
+
+                    if (matchedRow) {
+                        // Jika ditemukan, tampilkan nama dan nominal
+                        const name = matchedRow[nameIndex] || "Nama tidak ditemukan";
+                        const nominal = matchedRow[nominalIndex] || "Belum Ada Tagihan";
+
+                        document.getElementById("userName").textContent = name;
+                        document.getElementById("nominal").textContent = nominal;
+                    } else {
+                        // Jika tidak ditemukan, tampilkan pesan error
+                        document.getElementById("userName").textContent = "Nama tidak tersedia untuk ID ini.";
+                        document.getElementById("nominal").textContent = "Nominal tidak tersedia untuk ID ini.";
+                    }
+                })
+                .catch((error) => {
+                    console.error("Gagal mengambil data dari spreadsheet:", error);
+                    document.getElementById("userName").textContent = "Gagal memuat data.";
+                    document.getElementById("nominal").textContent = "Gagal memuat data.";
+                });
+        }
+
+        // Panggil fungsi untuk mengambil data spreadsheet berdasarkan ID
+        if (idNumber !== "Data tidak ditemukan") {
+            fetchSpreadsheetData(idNumber);
+        } else {
+            document.getElementById("userName").textContent = "Nomor ID tidak valid.";
+            document.getElementById("nominal").textContent = "Nomor ID tidak valid.";
+        }
 
         // Tombol Salin
         const copyButton = document.getElementById("copyButton");
@@ -151,15 +268,20 @@
 
         copyButton.addEventListener("click", function () {
             navigator.clipboard.writeText(rekeningNumber.textContent).then(() => {
-                alert("Nomor rekening berhasil disalin!");
+                // alert("Nomor rekening berhasil disalin!");
             });
         });
 
         // Tombol Bayar
         const payButton = document.getElementById("payButton");
-
         payButton.addEventListener("click", function () {
-            window.location.href = "proses.html";  // Redirect to process page
+            window.location.href = "proses.html"; // Redirect ke halaman proses pembayaran
+        });
+
+        // Tombol Batal
+        const cancelButton = document.getElementById("cancelButton");
+        cancelButton.addEventListener("click", function () {
+            window.location.href = "payment.html"; // Redirect ke halaman payment
         });
     </script>
 </body>
