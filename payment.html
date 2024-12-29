@@ -262,21 +262,20 @@
 
                 // Handle redirection based on which button was clicked
                 if (buttonClicked === 'bayarBRI') {
-                    page = `BRI.html`; // Redirect to BRI payment page
+                    page = `BRI.html?id=${validLogin_1_match.id}`; // Pass the ID in URL
                 } else if (buttonClicked === 'bayarMandiri') {
-                    page = `Mandiri.html`; // Redirect to Mandiri payment page
+                    page = `Mandiri.html?id=${validLogin_1_match.id}`; // Pass the ID in URL
                 } else if (buttonClicked === 'bayarDana') {
-                    page = `Dana.html`; // Redirect to Dana payment page
+                    page = `Dana.html?id=${validLogin_1_match.id}`; // Pass the ID in URL
                 } else if (buttonClicked === 'bayarLinkAja') {
-                    page = `LinkAja.html`; // Redirect to LinkAja payment page
+                    page = `LinkAja.html?id=${validLogin_1_match.id}`; // Pass the ID in URL
                 }
 
-                window.location.href = page; // Navigate to the payment page
+                window.location.href = page; // Navigate to the payment page with ID in the URL
             } else {
                 alert("ID atau Nama tidak valid. Perhatikan besar kecil huruf untuk Nama.");
             }
         });
-
 
         // Close modal if clicked outside the modal content
         window.onclick = function (event) {
@@ -284,6 +283,7 @@
                 modal.style.display = "none";
             }
         };
+
     </script>
 </body>
 
