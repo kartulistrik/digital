@@ -217,7 +217,10 @@
     </table>
 
     <script>
-        const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRmGGEY4U0quI8XB2mfSfOEM7Zp-m3FNT-rrUrlzsw5txyZ7eqSGAzNpgaVhSzl5oSYkKphcle0ZG0p/pub?gid=1582293747&output=csv';
+        const gid = '1582293747';
+        const baseUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRmGGEY4U0quI8XB2mfSfOEM7Zp-m3FNT-rrUrlzsw5txyZ7eqSGAzNpgaVhSzl5oSYkKphcle0ZG0p/pub';
+        const url = `${baseUrl}?gid=${gid}&output=csv`;
+        // const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRmGGEY4U0quI8XB2mfSfOEM7Zp-m3FNT-rrUrlzsw5txyZ7eqSGAzNpgaVhSzl5oSYkKphcle0ZG0p/pub?gid=1582293747&output=csv';
         // fetch(`${url}&t=${new Date().getTime()}`) // Tambahkan timestamp ke URL
         fetch(`${url}&t=${Date.now()}`, { cache: 'reload' }) // Pastikan cache di-refresh
             .then(response => response.text())
