@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Pembayaran Tahun 2025</title>
+    <style>
+        body {
+            background-color: #3dd2ff;
+            /* Green Tosca */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            /* Memastikan tinggi minimum halaman adalah 100% layar */
+            margin: 0;
+            /* Menghilangkan margin bawaan browser */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #481111;
+        }
+
+        th {
+            background-color: #35b4db;
+            text-align: center;
+        }
+
+        /* Mengatur lebar masing-masing kolom */
+        th:nth-child(1),
+        td:nth-child(1) {
+            width: 5%;
+            text-align: center;
+            /* Kolom No */
+        }
+
+        th:nth-child(2),
+        td:nth-child(2) {
+            width: 30%;
+            /* Kolom Bulan */
+        }
+
+        th:nth-child(3),
+        td:nth-child(3) {
+            width: 30%;
+            /* Kolom Jumlah */
+        }
+
+        th:nth-child(4),
+        td:nth-child(4) {
+            width: 30%;
+            text-align: center;
+            /* Kolom Keterangan */
+        }
+
+        .header-info {
+            margin-bottom: 20px;
+            margin-top: 120px;
+            /* Mengatur margin untuk memberi ruang di bawah header */
+        }
+
+        .header-info p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+
+        header {
+            position: fixed;
+            color: rgb(243, 243, 243);
+            /* Tetap di posisi layar saat di-scroll */
+            top: 0;
+            width: 100%;
+            /* Header tetap penuh melebar */
+            background-color: #137593;
+            padding: 10px 45px;
+            /* Padding atas/bawah dan sisi kiri/kanan */
+            box-sizing: border-box;
+            /* Pastikan padding dihitung dalam lebar total */
+            z-index: 1;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 21px;
+            font-weight: bold;
+            padding-left: 60px;
+            /* Tambahkan padding agar tidak menabrak tombol */
+            text-align: center;
+            /* Tetap di tengah kotak */
+        }
+
+        header p {
+            margin: 0;
+            font-size: 12px;
+            padding-left: 60px;
+            /* Sama seperti h1 agar konsisten */
+            text-align: center;
+        }
+
+        .home-button {
+            position: fixed;
+            top: 2px;
+            left: 2px;
+            height: 55px;
+            /* Menentukan tinggi tombol */
+            background-color: #e0fb0d;
+            /* Warna latar belakang hijau */
+            color: rgb(0, 0, 0);
+            /* Warna teks */
+            padding: 0 20px;
+            /* Mengatur padding kiri dan kanan */
+            text-align: center;
+            /* Membuat teks rata tengah secara horizontal */
+            text-decoration: none;
+            /* Menghilangkan garis bawah */
+            font-size: 16px;
+            /* Ukuran font */
+            font-weight: bold;
+            /* Membuat font menjadi bold */
+            cursor: pointer;
+            /* Menampilkan kursor pointer */
+            transition: background-color 0.3s ease;
+            /* Transisi saat hover */
+
+            /* Menambahkan flexbox untuk penataan */
+            display: flex;
+            align-items: center;
+            /* Menjaga teks berada di tengah secara vertikal */
+            justify-content: center;
+            /* Menjaga teks berada di tengah secara horizontal */
+            /* border-radius: 5px; */
+            /* Mengubah sudut menjadi melengkung (opsional) */
+        }
+
+
+        .home-button:hover {
+            background-color: #45a049;
+        }
+
+        h1 {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 40px;
+            /* Memberi jarak antara header dan judul laporan */
+        }
+
+        table-container {
+            margin-top: 60px;
+        }
+
+        main {
+            flex: 1;
+            /* Memastikan konten utama mengisi ruang yang tersisa */
+        }
+
+        footer {
+            background-color: #165c91;
+            /* Warna background */
+            color: white;
+            /* Warna teks */
+            text-align: center;
+            padding: 10px 0;
+            font-size: 14px;
+            margin-top: 20px;
+            /* Memberi jarak dengan konten di atas */
+        }
+
+        footer a {
+            color: #6ad2ff;
+            /* Warna link */
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="index.html" class="home-button">Home</a>
+        <div>
+            <h1>Kartu Listrik Digital</h1>
+            <p>Krapyak, Panjangrejo, Pundong Bantul, 55771</p>
+        </div>
+    </header>
+
+    <div class="header-info">
+        <p><strong>Nama:</strong> <span id="nama"></span></p>
+        <p><strong>No Rek:</strong> <span id="no-rek"></span></p>
+    </div>
+
+    <h1>Laporan Pembayaran Tahun 2025</h1>
+
+    <table id="data-table">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Bulan</th>
+                <th>Jumlah</th>
+                <th>Keterangan</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data akan dimuat di sini -->
+        </tbody>
+    </table>
+
+    <script>
+        const gid = '251883051';
+        const baseUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRmGGEY4U0quI8XB2mfSfOEM7Zp-m3FNT-rrUrlzsw5txyZ7eqSGAzNpgaVhSzl5oSYkKphcle0ZG0p/pub';
+        const url = `${baseUrl}?gid=${gid}&output=csv`;
+        // const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRmGGEY4U0quI8XB2mfSfOEM7Zp-m3FNT-rrUrlzsw5txyZ7eqSGAzNpgaVhSzl5oSYkKphcle0ZG0p/pub?gid=329278138&output=csv';
+        // fetch(`${url}&t=${new Date().getTime()}`) // Tambahkan timestamp ke URL
+        fetch(`${url}&t=${Date.now()}`, { cache: 'reload' }) // Pastikan cache di-refresh
+            .then(response => response.text())
+            .then(data => {
+                const rows = data.split("\n");
+                const tableBody = document.getElementById('data-table').getElementsByTagName('tbody')[0];
+
+                tableBody.innerHTML = ""; // Bersihkan isi tabel sebelum menambahkan data baru
+
+                // Menampilkan Nama dan No Rek dari C2 dan C3
+                const nama = rows[1].split(",")[2];  // C2
+                const noRek = rows[2].split(",")[2]; // C3
+
+                document.getElementById('nama').textContent = nama;
+                document.getElementById('no-rek').textContent = noRek;
+
+                // Ambil baris mulai dari baris ke-6 (indeks 5)
+                for (let i = 6; i < rows.length; i++) { // Mulai dari baris ke-6 (indeks 5)
+                    const rowData = rows[i].split(",");
+                    if (rowData.length > 1) { // Pastikan baris memiliki data
+                        const row = tableBody.insertRow();
+
+                        // Buat sel untuk kolom
+                        const noCell = row.insertCell(0);
+                        const bulanCell = row.insertCell(1);
+                        const jumlahCell = row.insertCell(2);
+                        const keteranganCell = row.insertCell(3);
+
+                        // Isi data ke dalam sel
+                        noCell.textContent = rowData[0];         // No
+                        bulanCell.textContent = rowData[1];      // Bulan
+                        jumlahCell.textContent = rowData[2];     // Jumlah
+                        keteranganCell.textContent = rowData[3]; // Keterangan
+
+                        // Kondisi warna berdasarkan keterangan
+                        if (rowData[3].trim() === "Lunas") {
+                            keteranganCell.style.color = "blue"; // Warna hijau
+                        } else if (rowData[3].trim() === "Belum Lunas") {
+                            keteranganCell.style.color = "red"; // Warna merah
+                        } else if (rowData[3].trim() === "Diproses") {
+                            keteranganCell.style.color = "green"; // Warna merah
+                        }
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching CSV:', error);
+            });
+
+    </script>
+</body>
+<footer>
+    Copyright &copy; 2025 <a target="_blank">rdwnsyaiful@gmail.com</a>
+</footer>
+
+
+</html>
