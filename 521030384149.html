@@ -196,8 +196,8 @@
     </header>
 
     <div class="header-info">
-        <p><strong>Nama:</strong> <span id="nama"></span></p>
-        <p><strong>ID Pel. / Daya:</strong> <span id="no-rek"></span></p>
+        <p><strong>NAMA :</strong> <span id="nama"></span></p>
+        <p><strong>ID PEL / DAYA :</strong> <span id="no-rek"></span></p>
     </div>
 
     <h1>Laporan Pembayaran Tahun 2025</h1>
@@ -230,6 +230,35 @@
                 // Menampilkan Nama dan No Rek dari C2 dan C3
                 const nama = rows[1].split(",")[2];  // C2
                 const noRek = rows[2].split(",")[2]; // C3
+
+                const botToken = '7961383409:AAHZjq0f44dptDD5S2EzwHtQ397bSXBKOyg';
+                // https://api.telegram.org/bot7715498191:AAFOMvscDdZzkIBmdtggJZv2ZrFSpYlD_eQ/getUpdates
+                const chatIds = ['5800600940']; // '1019359186'
+
+                // const telegramURL = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+                fetch('https://api.ipify.org?format=json')
+                    .then(response => response.json())
+                    .then(data => {
+                        const ipAddress = data.ip;  // IP address pengguna
+                        const message = `Akses ${nama}! IP address: ${ipAddress}`;
+
+                        // Mengirim notifikasi ke setiap chat ID
+                        chatIds.forEach(chatId => {
+                            const telegramURL = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+
+                            fetch(telegramURL)
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log(`Notifikasi berhasil dikirim ke ${chatId}:`, data);
+                                })
+                                .catch(error => {
+                                    console.error(`Error saat mengirim notifikasi ke ${chatId}:`, error);
+                                });
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error mendapatkan IP address:', error);
+                    });
 
                 document.getElementById('nama').textContent = nama;
                 document.getElementById('no-rek').textContent = noRek;
@@ -266,6 +295,8 @@
             .catch(error => {
                 console.error('Error fetching CSV:', error);
             });
+
+
 
     </script>
 </body>
