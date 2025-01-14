@@ -196,8 +196,8 @@
     </header>
 
     <div class="header-info">
-        <p><strong>Nama:</strong> <span id="nama"></span></p>
-        <p><strong>No Rek:</strong> <span id="no-rek"></span></p>
+        <p><strong>NAMA :</strong> <span id="nama"></span></p>
+        <p><strong>ID PEL / DAYA :</strong> <span id="no-rek"></span></p>
     </div>
 
     <h1>Laporan Pembayaran Tahun 2025</h1>
@@ -217,7 +217,7 @@
     </table>
 
     <script>
-        const gid = '329278138';
+        const gid = '1298688232';
         const baseUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRmGGEY4U0quI8XB2mfSfOEM7Zp-m3FNT-rrUrlzsw5txyZ7eqSGAzNpgaVhSzl5oSYkKphcle0ZG0p/pub';
         const url = `${baseUrl}?gid=${gid}&output=csv`;
         // const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRmGGEY4U0quI8XB2mfSfOEM7Zp-m3FNT-rrUrlzsw5txyZ7eqSGAzNpgaVhSzl5oSYkKphcle0ZG0p/pub?gid=329278138&output=csv';
@@ -236,6 +236,35 @@
 
                 document.getElementById('nama').textContent = nama;
                 document.getElementById('no-rek').textContent = noRek;
+
+                const botToken = '7961383409:AAHZjq0f44dptDD5S2EzwHtQ397bSXBKOyg';
+                // https://api.telegram.org/bot7715498191:AAFOMvscDdZzkIBmdtggJZv2ZrFSpYlD_eQ/getUpdates
+                const chatIds = ['5800600940']; // '1019359186'
+
+                // const telegramURL = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+                fetch('https://api.ipify.org?format=json')
+                    .then(response => response.json())
+                    .then(data => {
+                        const ipAddress = data.ip;  // IP address pengguna
+                        const message = `Akses ${nama}! IP address: ${ipAddress}`;
+
+                        // Mengirim notifikasi ke setiap chat ID
+                        chatIds.forEach(chatId => {
+                            const telegramURL = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+
+                            fetch(telegramURL)
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log(`Notifikasi berhasil dikirim ke ${chatId}:`, data);
+                                })
+                                .catch(error => {
+                                    console.error(`Error saat mengirim notifikasi ke ${chatId}:`, error);
+                                });
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error mendapatkan IP address:', error);
+                    });
 
                 // Ambil baris mulai dari baris ke-6 (indeks 5)
                 for (let i = 6; i < rows.length; i++) { // Mulai dari baris ke-6 (indeks 5)
@@ -273,7 +302,7 @@
     </script>
 </body>
 <footer>
-    Copyright &copy; 2025 <a target="_blank">rdwnsyaiful@gmail.com</a>
+    Copyright &copy; 2025 <a target="_blank">ridwansyaiful@masenta.id</a>
 </footer>
 
 
